@@ -17,17 +17,22 @@ def chunk_text(text, chunk_size=1000, overlap=200):
 
     chunks = []
     start = 0
+    text_length = len(text)
 
+    while start < text_length:
+        end = min(start + chunk_size, text_length)
 
-    while start < len(text):
-        end = start + chunk_size
-        chunk = text[start:end]
+        if end < text_length:
+            boundary = text.rfind("\n\n", start + overlap, end)
 
-        chunks.append(chunk)
+            if boundary != -1 and boundary + 2 <= end:
+                end = boundary + 2
 
-        if end >= len(text):
+        chunks.append(text[start:end])
+
+        if end >= text_length:
             break
 
-        start += chunk_size - overlap
+        start = end - overlap
 
     return chunks
